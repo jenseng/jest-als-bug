@@ -1,8 +1,13 @@
 # Jest AsyncLocalStorage bug repro
 
-This repo contains a simple Jest bug repro around [AsyncLocalStorage](https://nodejs.org/api/async_context.html) context loss. When the test files are run individually, they pass. When they run together, one typically fails due to context loss. This happens regardless of settings like `runInBand` or `maxWorkers`.
+This repo contains a simple Jest bug repro around [AsyncLocalStorage](https://nodejs.org/api/async_context.html) context loss. When the test files are run individually, they pass. When they run together, one typically fails due to context loss. This happens regardless of settings like `runInBand` or `maxWorkers` (though in a real app's test suite it's much worse with `maxWorkers`).
 
 The tests in question set a store using `enterWith` during `beforeEach`, and later retrieve it in tests via `getStore`. It's possible this is actually a bug in Node.js, or it might have to do with some strange interplay between Node.js's promise hooks and Jest's vm context injection (e.g. perhaps the `Promise` provided to the VM is not the "right" one, and thus the hooks don't work correctly when it is used?).
+
+## Repro Steps
+
+1. Run `npm run test`
+2. Observe that one of the tests usually fails
 
 ## Versions tested
 
