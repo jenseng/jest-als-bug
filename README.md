@@ -4,6 +4,8 @@ This repo contains a simple Jest bug repro around [AsyncLocalStorage](https://no
 
 The tests in question set a store using `enterWith` during `beforeEach`, and later retrieve it in tests via `getStore`. It's possible this is actually a bug in Node.js, or it might have to do with some strange interplay between Node.js's promise hooks and Jest's vm context injection (e.g. perhaps the `Promise` provided to the VM is not the "right" one, and thus the hooks don't work correctly when it is used?).
 
+I have thus far been unable to repro this issue outside of Jest with [roughly equivalent code](./src/repro-attempt-without-jest.js); I haven't dug deeply enough into Jest to determine where the problem lies.
+
 ## Repro Steps
 
 1. Run `npm run test`
